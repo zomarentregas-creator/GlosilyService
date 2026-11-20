@@ -24,31 +24,20 @@ supabase/seed_staff.sql            Dar acesso de gestão a um utilizador
 .github/workflows/pages.yml        Publicação automática no GitHub Pages
 ```
 
-## Configuração (uma só vez)
+## Configuração
 
-### 1. Criar o projecto no Supabase
-1. Crie um projecto em https://supabase.com/dashboard (região próxima, por exemplo `eu-west`/`eu-central`).
-2. Em **SQL Editor**, cole e execute `supabase/migrations/20261120000000_init.sql`.
+O projecto Supabase **GlosilyService** já está criado (região `eu-west-1`), com a migração aplicada e o `js/config.js` preenchido. Falta apenas o que só se faz no painel:
 
-### 2. Ligar o site
-Em **Project Settings → API**, copie o *Project URL* e a chave *anon public* para `js/config.js`:
-
-```js
-window.GLOSILY_CONFIG = {
-  SUPABASE_URL: "https://xxxx.supabase.co",
-  SUPABASE_ANON_KEY: "eyJ..."
-};
-```
-
-A chave `anon` é pública por desenho. Nunca use a `service_role` no site.
-
-### 3. Criar a conta da equipa
+### 1. Criar a conta da equipa
 1. **Authentication → Users → Add user**: e-mail e palavra-passe (marque "Auto confirm").
-2. Edite o e-mail em `supabase/seed_staff.sql` e execute-o no SQL Editor. Só quem estiver na tabela `staff` entra na gestão.
+2. Edite o e-mail em `supabase/seed_staff.sql` e execute-o no **SQL Editor**. Só quem estiver na tabela `staff` entra na gestão.
 3. **Authentication → Sign In / Providers → Email**: desligue **"Allow new users to sign up"**, para que ninguém se registe sozinho.
 
-### 4. Definir os contactos da empresa
+### 2. Definir os contactos da empresa
 Entre na gestão → Configurações → preencha o WhatsApp (com indicativo, ex.: `258841234567`) e o e-mail.
+
+### Recriar noutro projecto Supabase
+Execute por ordem os ficheiros de `supabase/migrations/` e actualize `js/config.js` com o URL e a chave *anon public* (Project Settings → API). Nunca use a `service_role` no site.
 
 ## Publicar
 
@@ -73,11 +62,11 @@ Os visitantes **não conseguem ler** os pedidos de ninguém. Tudo isto é impost
 python3 -m http.server 8000
 ```
 
-Abra http://localhost:8000. Sem `js/config.js` preenchido, o formulário e a gestão mostram "serviço indisponível".
+Abra http://localhost:8000. Usa o projecto Supabase configurado em `js/config.js`.
 
 ## Antes de lançar: lista de verificação
 
-- [ ] Migração executada e `config.js` preenchido
+- [x] Projecto Supabase criado, migração aplicada e `config.js` preenchido
 - [ ] Conta da equipa criada e registo público desligado
 - [ ] WhatsApp e e-mail da empresa definidos
 - [ ] Enviar um pedido de teste pelo site e confirmar que aparece na gestão
