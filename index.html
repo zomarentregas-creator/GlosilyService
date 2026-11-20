@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Importação de mochilas e acessórios. Solicite uma cotação ou fale com a nossa equipa.">
+<title>GlosilyService — Mochilas e acessórios</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header><div class="wrap nav">
+  <a class="brand" href="#">Glosily<span>Service.</span></a>
+  <nav class="navlinks"><a href="#produtos">Produtos</a><a href="#processo">Como funciona</a><a href="#contacto">Pedir cotação</a></nav>
+  <div class="navright"><button class="pill" onclick="openAdmin()">Área de gestão ↗</button><a class="btn" href="#contacto">Solicitar cotação</a></div>
+</div></header>
+
+<main>
+<section class="hero"><div class="wrap hero-grid">
+  <div><div class="eyebrow">Importação simplificada</div><h1>O produto certo.<br>Do mundo até si.</h1>
+    <p>Encontre mochilas, pastas e acessórios com qualidade. Tratamos do processo de importação e acompanhamos o seu pedido do início à entrega.</p>
+    <div class="actions"><a class="btn light" href="#produtos">Explorar produtos <span>→</span></a><a class="btn outline" href="#contacto">Pedir uma cotação</a></div>
+    <p class="hero-note">Atendimento personalizado · Acompanhamento do pedido · Cotação sem compromisso</p>
+  </div>
+  <div class="visual"><div class="orb"><div class="bag"><span class="bagtag">GLOSILY</span></div></div><div class="float-card fc1">✦ Selecção de produtos<small>Opções para diferentes necessidades</small></div><div class="float-card fc2">✓ Acompanhamento<small>Do pedido à entrega</small></div></div>
+</div></section>
+
+<section id="produtos"><div class="wrap">
+  <div class="section-head"><div><div class="tag">Catálogo em destaque</div><h2>Escolha o que precisa.</h2></div><p>Estes são exemplos de produtos. Envie-nos o modelo, quantidade ou referência que procura para receber uma cotação personalizada.</p></div>
+  <div class="products">
+    <article class="product"><div class="product-art"><div class="mini-bag"></div></div><div class="product-info"><h3>Mochila urbana</h3><p>Design versátil para o dia-a-dia, trabalho ou universidade.</p><div class="product-bottom"><span class="price">Sob cotação</span><button class="small-btn" onclick="selectProduct('Mochila urbana')">Tenho interesse ↗</button></div></div></article>
+    <article class="product"><div class="product-art orange"><div class="mini-bag orange-bag"></div></div><div class="product-info"><h3>Mochila executiva</h3><p>Compartimentos funcionais para portátil e documentos.</p><div class="product-bottom"><span class="price">Sob cotação</span><button class="small-btn" onclick="selectProduct('Mochila executiva')">Tenho interesse ↗</button></div></div></article>
+    <article class="product"><div class="product-art blue"><div class="mini-bag blue-bag"></div></div><div class="product-info"><h3>Pastas e acessórios</h3><p>Alternativas práticas para organizar e transportar os seus itens.</p><div class="product-bottom"><span class="price">Sob cotação</span><button class="small-btn" onclick="selectProduct('Pastas e acessórios')">Tenho interesse ↗</button></div></div></article>
+  </div>
+</div></section>
+
+<section class="how" id="processo"><div class="wrap"><div class="section-head"><div><div class="tag">Processo simples</div><h2>Da pesquisa à entrega.</h2></div><p>Um processo acompanhado pela nossa equipa, com comunicação clara em cada etapa.</p></div>
+  <div class="steps"><div class="step"><div class="num">01</div><h3>Conte-nos o que procura</h3><p>Indique o produto, modelo, quantidade e quaisquer referências que tenha.</p></div><div class="step"><div class="num">02</div><h3>Receba a sua cotação</h3><p>Analisamos o pedido e entramos em contacto com preço estimado, prazo e condições.</p></div><div class="step"><div class="num">03</div><h3>Acompanhe o pedido</h3><p>Após a confirmação, mantemos comunicação sobre o progresso da importação.</p></div></div>
+</div></section>
+
+<section class="lead-section" id="contacto"><div class="wrap lead-grid">
+  <div><div class="eyebrow">Vamos conversar</div><h2>Tem um produto em mente?</h2><p>Preencha o formulário. A nossa equipa recebe o seu pedido, organiza as informações e dá seguimento pelo canal mais conveniente.</p><p>Também pode pedir produtos que não estejam no catálogo.</p></div>
+  <form class="lead-form" id="leadForm"><h3>Solicitar atendimento</h3><div class="success" id="successMsg">Pedido registado. A nossa equipa poderá dar seguimento pelo canal escolhido.</div>
+    <div class="field"><label for="name">Nome completo *</label><input id="name" required placeholder="Como se chama?"></div>
+    <div class="field"><label for="phone">WhatsApp / telefone *</label><input id="phone" required placeholder="+258 8X XXX XXXX"></div>
+    <div class="field"><label for="email">E-mail</label><input id="email" type="email" placeholder="nome@email.com"></div>
+    <div class="field"><label for="product">Produto de interesse *</label><select id="product" required><option value="">Seleccione uma opção</option><option>Mochila urbana</option><option>Mochila executiva</option><option>Pastas e acessórios</option><option>Outro produto / pedido personalizado</option></select></div>
+    <div class="field"><label for="quantity">Quantidade estimada</label><select id="quantity"><option>1 unidade</option><option>2 a 5 unidades</option><option>6 a 20 unidades</option><option>Mais de 20 unidades</option><option>Ainda não definido</option></select></div>
+    <div class="field"><label for="message">Detalhes do pedido</label><textarea id="message" placeholder="Modelo, cor, orçamento, link de referência..."></textarea></div>
+    <div class="field"><label for="channel">Como prefere ser contactado?</label><select id="channel"><option value="WhatsApp">WhatsApp</option><option value="E-mail">E-mail</option></select></div>
+    <button class="btn" type="submit">Enviar pedido <span>→</span></button><div class="form-note">Ao enviar, autoriza a nossa equipa a utilizar os dados fornecidos exclusivamente para responder ao seu pedido.</div>
+  </form>
+</div></section>
+</main>
+<footer><div class="wrap foot"><span>© <span id="year"></span> GlosilyService. Todos os direitos reservados.</span><span>Importação · Atendimento · Acompanhamento</span></div></footer>
+
+<div class="admin" id="admin">
+  <aside class="sidebar"><div class="brand">Glosily<span>Service.</span></div><button class="sidebtn active" onclick="showTab('leads',this)">▦ &nbsp; Clientes e pedidos</button><button class="sidebtn" onclick="showTab('overview',this)">◫ &nbsp; Visão geral</button><button class="sidebtn" onclick="showTab('settings',this)">⚙ &nbsp; Configurações</button><button class="sidebtn sidebottom" onclick="closeAdmin()">← &nbsp; Voltar ao site</button></aside>
+  <div class="admin-main"><div class="admin-top"><div><h2 id="adminTitle">Clientes e pedidos</h2><p>Gestão de leads, pré-atendimento e encaminhamento.</p></div><button class="btn" onclick="openLeadModal()">+ Novo cliente</button></div>
+    <div class="stats"><div class="stat"><span>Total de pedidos</span><strong id="statTotal">0</strong></div><div class="stat"><span>Novos</span><strong id="statNew">0</strong></div><div class="stat"><span>Em atendimento</span><strong id="statActive">0</strong></div><div class="stat"><span>Convertidos</span><strong id="statWon">0</strong></div></div>
+    <div id="tabLeads" class="panel"><div class="panel-head"><h3>Base de clientes</h3><div class="toolbar"><input id="search" placeholder="Pesquisar nome ou contacto..." oninput="renderLeads()"><select id="filterStatus" onchange="renderLeads()"><option value="">Todos os estados</option><option>Novo</option><option>Contactado</option><option>Qualificado</option><option>Fechado</option><option>Perdido</option></select></div></div><div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Produto</th><th>Contacto</th><th>Estado</th><th>Data</th><th>Acções</th></tr></thead><tbody id="leadRows"></tbody></table></div></div>
+    <div id="tabOverview" class="panel" style="display:none"><div class="panel-head"><h3>Resumo operacional</h3></div><p style="color:#68736f;font-size:13px;line-height:1.7">Utilize a lista de clientes para acompanhar cada pedido. Actualize o estado após cada contacto e encaminhe o atendimento para WhatsApp ou e-mail a partir da ficha do cliente.</p><div id="overviewText"></div></div>
+    <div id="tabSettings" class="panel" style="display:none"><div class="panel-head"><h3>Configuração dos canais</h3></div><p style="color:#68736f;font-size:13px">Defina os dados da empresa para que os botões de encaminhamento abram os canais correctos.</p><div class="modal-form"><div class="field"><label>Número WhatsApp (com indicativo, sem + ou espaços)</label><input id="settingWa" placeholder="258841234567"></div><div class="field"><label>E-mail de atendimento</label><input id="settingEmail" type="email" placeholder="contacto@empresa.co.mz"></div><button class="btn" onclick="saveSettings()">Guardar configurações</button><p class="form-note">As configurações ficam guardadas neste navegador.</p></div></div>
+  </div>
+</div>
+
+<div class="modal" id="leadModal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">Novo cliente</h3><button class="close" onclick="closeLeadModal()">✕</button></div><form id="crmForm" class="modal-form">
+<input type="hidden" id="editId"><div class="field"><label>Nome *</label><input id="crmName" required></div><div class="field"><label>Telefone / WhatsApp *</label><input id="crmPhone" required></div><div class="field"><label>E-mail</label><input id="crmEmail" type="email"></div><div class="field"><label>Produto / pedido *</label><input id="crmProduct" required></div><div class="field"><label>Quantidade</label><input id="crmQty" placeholder="Ex.: 10 unidades"></div><div class="field"><label>Estado do atendimento</label><select id="crmStatus"><option>Novo</option><option>Contactado</option><option>Qualificado</option><option>Fechado</option><option>Perdido</option></select></div><div class="field"><label>Notas de pré-atendimento</label><textarea id="crmNotes" placeholder="Necessidade, orçamento, urgência, próximos passos..."></textarea></div><div class="modal-actions"><button type="button" class="small-btn" onclick="closeLeadModal()">Cancelar</button><button class="btn" type="submit">Guardar cliente</button></div></form></div></div>
+<div class="toast" id="toast"></div>
+<script src="js/app.js"></script>
+</body>
+</html>
