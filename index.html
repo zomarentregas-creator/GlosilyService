@@ -5,30 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Importação de mochilas e acessórios. Solicite uma cotação ou fale com a nossa equipa.">
 <title>GlosilyService — Mochilas e acessórios</title>
-<meta name="theme-color" content="#174d3b">
+<meta name="theme-color" content="#0b1413">
 <meta property="og:type" content="website">
 <meta property="og:title" content="GlosilyService — Mochilas e acessórios">
 <meta property="og:description" content="Importação de mochilas, pastas e acessórios. Peça uma cotação sem compromisso.">
 <meta property="og:locale" content="pt_MZ">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Jost:wght@200;300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/theme.css">
 </head>
 <body>
 <header><div class="wrap nav">
   <a class="brand" href="#">Glosily<span>Service.</span></a>
-  <nav class="navlinks"><a href="#produtos">Produtos</a><a href="#processo">Como funciona</a><a href="#contacto">Pedir cotação</a></nav>
   <div class="navright"><button class="pill" onclick="openAdmin()">Área de gestão ↗</button><a class="btn" href="#contacto">Solicitar cotação</a></div>
 </div></header>
 
 <main>
-<section class="hero"><div class="wrap hero-grid">
-  <div><div class="eyebrow">Importação simplificada</div><h1>O produto certo.<br>Do mundo até si.</h1>
-    <p>Encontre mochilas, pastas e acessórios com qualidade. Tratamos do processo de importação e acompanhamos o seu pedido do início à entrega.</p>
-    <div class="actions"><a class="btn light" href="#produtos">Explorar produtos <span>→</span></a><a class="btn outline" href="#contacto">Pedir uma cotação</a></div>
-    <p class="hero-note">Atendimento personalizado · Acompanhamento do pedido · Cotação sem compromisso</p>
-  </div>
-  <div class="visual"><div class="orb"><div class="bag"><span class="bagtag">GLOSILY</span></div></div><div class="float-card fc1">✦ Selecção de produtos<small>Opções para diferentes necessidades</small></div><div class="float-card fc2">✓ Acompanhamento<small>Do pedido à entrega</small></div></div>
-</div></section>
+<section class="hero"><canvas id="gl" aria-hidden="true"></canvas><div class="beam"></div>
+  <div class="wrap hero-copy"><h1>O produto certo. Do mundo até si.</h1>
+    <p>Mochilas, pastas e acessórios de qualidade. Tratamos da importação e acompanhamos o seu pedido até à entrega.</p>
+    <div class="actions"><a class="btn light" href="#produtos">Explorar produtos</a><a class="btn outline" href="#contacto">Pedir uma cotação</a></div></div>
+  <nav class="band" aria-label="Secções"><a href="#produtos">Produtos</a><a href="#processo">Como funciona</a><a href="#contacto">Pedir cotação</a><button type="button" onclick="openAdmin()">Área de gestão</button></nav>
+</section>
 
 <section id="produtos"><div class="wrap">
   <div class="section-head"><div><div class="tag">Catálogo em destaque</div><h2>Escolha o que precisa.</h2></div><p>Estes são exemplos de produtos. Envie-nos o modelo, quantidade ou referência que procura para receber uma cotação personalizada.</p></div>
@@ -86,5 +86,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" crossorigin="anonymous"></script>
 <script src="js/config.js"></script>
 <script src="js/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/fx.js"></script>
 </body>
 </html>
