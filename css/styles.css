@@ -172,3 +172,12 @@ tr:last-child td{border-bottom:0}
   .stat{padding:12px}
   .stat strong{font-size:22px}
 }
+
+/* Produção: honeypot, erros, botão WhatsApp, estados desactivados */
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.error{display:none;background:#fbe8e5;padding:12px;border-radius:10px;color:#7a2f25;font-size:13px}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.wa-float{position:fixed;right:20px;bottom:20px;z-index:20;background:#25d366;color:#fff;font-weight:800;font-size:13px;padding:13px 18px;border-radius:30px;box-shadow:0 10px 30px #0003}
+.wa-float[hidden]{display:none}
+.wa-float:hover{filter:brightness(1.07)}
+:focus-visible{outline:3px solid #71923a;outline-offset:2px}
