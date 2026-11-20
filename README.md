@@ -17,7 +17,7 @@ Website de importação de mochilas, pastas e acessórios. Os clientes pedem uma
 ```
 index.html                         Página e área de gestão
 css/styles.css                     Estilos
-js/config.js                       URL e chave pública do Supabase (preencher)
+js/config.js                       URL e chave pública do Supabase
 js/app.js                          Lógica do site e da gestão
 supabase/migrations/*.sql          Esquema da base de dados e políticas de segurança
 supabase/seed_staff.sql            Dar acesso de gestão a um utilizador
