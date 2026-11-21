@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://zomarentregas-creator.github.io/GlosilyService/sitemap.xml

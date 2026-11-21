@@ -10,13 +10,21 @@
 <meta property="og:title" content="GlosilyService — Mochilas e acessórios">
 <meta property="og:description" content="Importação de mochilas, pastas e acessórios. Peça uma cotação sem compromisso.">
 <meta property="og:locale" content="pt_MZ">
+<meta property="og:url" content="https://zomarentregas-creator.github.io/GlosilyService/">
+<meta property="og:image" content="https://zomarentregas-creator.github.io/GlosilyService/og-image.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://zomarentregas-creator.github.io/GlosilyService/">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"GlosilyService","url":"https://zomarentregas-creator.github.io/GlosilyService/","logo":"https://zomarentregas-creator.github.io/GlosilyService/favicon.svg","description":"Importação de mochilas, pastas e acessórios com acompanhamento do pedido."},{"@type":"WebSite","name":"GlosilyService","url":"https://zomarentregas-creator.github.io/GlosilyService/","inLanguage":"pt"}]}</script>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Sora:wght@300;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=5">
-<link rel="stylesheet" href="css/theme-azul.css?v=5">
+<link rel="stylesheet" href="css/styles.css?v=6">
+<link rel="stylesheet" href="css/theme-azul.css?v=6">
 </head>
 <body>
+<a class="skip" href="#produtos">Saltar para o conteúdo</a>
 <header><div class="wrap nav">
   <a class="brand" href="#">Glosily<span>Service.</span></a>
   <div class="navright"><a class="pill" href="#acompanhar">Acompanhar pedido</a><button class="pill" onclick="openAdmin()">Área de gestão ↗</button><a class="btn" href="#contacto">Solicitar cotação</a></div>
@@ -33,7 +41,8 @@
 
 <section id="produtos"><div class="wrap">
   <div class="section-head"><div><div class="tag">Catálogo em destaque</div><h2>Escolha o que precisa.</h2></div><p>Estes são exemplos de produtos. Envie-nos o modelo, quantidade ou referência que procura para receber uma cotação personalizada.</p></div>
-  <div class="products">
+  <div class="filters" id="filters" hidden></div>
+  <div class="products" id="catalog">
     <article class="product"><div class="product-art"><div class="mini-bag"></div></div><div class="product-info"><h3>Mochila urbana</h3><p>Design versátil para o dia-a-dia, trabalho ou universidade.</p><div class="product-bottom"><span class="price">Sob cotação</span><button class="small-btn" onclick="selectProduct('Mochila urbana')">Tenho interesse ↗</button></div></div></article>
     <article class="product"><div class="product-art orange"><div class="mini-bag orange-bag"></div></div><div class="product-info"><h3>Mochila executiva</h3><p>Compartimentos funcionais para portátil e documentos.</p><div class="product-bottom"><span class="price">Sob cotação</span><button class="small-btn" onclick="selectProduct('Mochila executiva')">Tenho interesse ↗</button></div></div></article>
     <article class="product"><div class="product-art blue"><div class="mini-bag blue-bag"></div></div><div class="product-info"><h3>Pastas e acessórios</h3><p>Alternativas práticas para organizar e transportar os seus itens.</p><div class="product-bottom"><span class="price">Sob cotação</span><button class="small-btn" onclick="selectProduct('Pastas e acessórios')">Tenho interesse ↗</button></div></div></article>
@@ -47,6 +56,8 @@
 <section id="acompanhar"><div class="wrap"><div class="section-head"><div><div class="tag">Acompanhamento</div><h2>Onde está o seu pedido?</h2></div><p>Introduza o código recebido ao fazer o pedido e os 4 últimos dígitos do seu telefone.</p></div>
   <form class="track-form" id="trackForm"><input id="trackCode" placeholder="GLS-XXXXXX" maxlength="10" required autocomplete="off" aria-label="Código do pedido"><input id="trackPhone" placeholder="Últimos 4 dígitos do telefone" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required aria-label="Últimos 4 dígitos do telefone"><button class="btn" type="submit">Consultar</button></form>
   <div class="error" id="trackError" role="alert"></div><div class="track-result" id="trackResult" hidden></div></div></section>
+<section id="provas" hidden><div class="wrap"><div class="section-head"><div><div class="tag">Opiniões</div><h2>Quem já pediu connosco.</h2></div></div><div class="quotes" id="quotes"></div></div></section>
+<section id="faq"><div class="wrap"><div class="section-head"><div><div class="tag">Perguntas frequentes</div><h2>Tire as suas dúvidas.</h2></div><p>Não encontrou a resposta? Escreva-nos pelo formulário ou pelo WhatsApp.</p></div><div class="faq" id="faqList"></div></div></section>
 <section class="lead-section" id="contacto"><div class="wrap lead-grid">
   <div><div class="eyebrow">Vamos conversar</div><h2>Tem um produto em mente?</h2><p>Preencha o formulário. A nossa equipa recebe o seu pedido, organiza as informações e dá seguimento pelo canal mais conveniente.</p><p>Também pode pedir produtos que não estejam no catálogo.</p></div>
   <form class="lead-form" id="leadForm"><h3>Solicitar atendimento</h3><div class="success" id="successMsg">Pedido registado. A nossa equipa poderá dar seguimento pelo canal escolhido.</div>
@@ -56,6 +67,7 @@
     <div class="field"><label for="email">E-mail</label><input id="email" type="email" maxlength="160" autocomplete="email" placeholder="nome@email.com"></div>
     <div class="field"><label for="product">Produto de interesse *</label><select id="product" required><option value="">Seleccione uma opção</option><option>Mochila urbana</option><option>Mochila executiva</option><option>Pastas e acessórios</option><option>Outro produto / pedido personalizado</option></select></div>
     <div class="field"><label for="quantity">Quantidade estimada</label><select id="quantity"><option>1 unidade</option><option>2 a 5 unidades</option><option>6 a 20 unidades</option><option>Mais de 20 unidades</option><option>Ainda não definido</option></select></div>
+    <div class="estimate" id="estimate" hidden aria-live="polite"></div>
     <div class="field"><label for="message">Detalhes do pedido</label><textarea id="message" maxlength="2000" placeholder="Modelo, cor, orçamento, link de referência..."></textarea></div>
     <div class="field"><label for="channel">Como prefere ser contactado?</label><select id="channel"><option value="WhatsApp">WhatsApp</option><option value="E-mail">E-mail</option></select></div>
     <div class="error" id="errorMsg" role="alert"></div>
@@ -86,11 +98,15 @@
 
 <div class="modal" id="leadModal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">Novo cliente</h3><button class="close" onclick="closeLeadModal()">✕</button></div><form id="crmForm" class="modal-form">
 <input type="hidden" id="editId"><div class="field"><label>Nome *</label><input id="crmName" required></div><div class="field"><label>Telefone / WhatsApp *</label><input id="crmPhone" required></div><div class="field"><label>E-mail</label><input id="crmEmail" type="email"></div><div class="field"><label>Produto / pedido *</label><input id="crmProduct" required maxlength="160"></div><div class="field"><label>Quantidade</label><input id="crmQty" maxlength="60" placeholder="Ex.: 10 unidades"></div><div class="field"><label>Estado do atendimento</label><select id="crmStatus"><option>Novo</option><option>Contactado</option><option>Qualificado</option><option>Fechado</option><option>Perdido</option></select></div><div class="field"><label>Fase do pedido (visível ao cliente)</label><select id="crmStage"><option>Pedido recebido</option><option>Cotação enviada</option><option>Confirmado</option><option>Em trânsito</option><option>Desalfandegamento</option><option>Pronto para levantar</option><option>Entregue</option><option>Cancelado</option></select></div><div class="field"><label>Nota para o cliente (visível, máx. 300)</label><input id="crmPublic" maxlength="300" placeholder="Ex.: Chegada prevista na próxima semana"></div><div class="field"><label>Notas de pré-atendimento</label><textarea id="crmNotes" placeholder="Necessidade, orçamento, urgência, próximos passos..."></textarea></div><div class="modal-actions"><button type="button" class="small-btn" onclick="closeLeadModal()">Cancelar</button><button class="btn" type="submit">Guardar cliente</button></div></form></div></div>
+<div class="dock" role="group" aria-label="Preferências"><button type="button" id="langBtn" aria-label="Mudar idioma">EN</button><button type="button" id="themeBtn" aria-label="Alternar modo claro/escuro">☀</button><button type="button" id="fxBtn" aria-label="Ligar ou desligar efeitos 3D">3D</button></div>
+<dialog class="pdlg" id="pDlg"><button type="button" class="x" aria-label="Fechar">✕</button><div id="pBody"></div></dialog>
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" crossorigin="anonymous"></script>
 <script src="js/config.js"></script>
-<script src="js/app.js?v=5"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="js/fx.js?v=5"></script>
+<script src="js/app.js?v=6"></script>
+<script src="js/content.js?v=6"></script>
+<script src="js/catalog.js?v=6"></script>
+<script src="js/i18n.js?v=6"></script>
+<script src="js/fx.js?v=6"></script>
 </body>
 </html>
