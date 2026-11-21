@@ -42,7 +42,29 @@ async function loadPublicSettings(){
   }
 }
 
+const CODE_ALPHA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function newCode(){const a=new Uint8Array(6);crypto.getRandomValues(a);return 'GLS-'+[...a].map(n=>CODE_ALPHA[n%32]).join('')}
 let lastSubmit=0;
+// Acompanhamento de pedido (código + 4 últimos dígitos do telefone)
+const STAGES=['Pedido recebido','Cotação enviada','Confirmado','Em trânsito','Desalfandegamento','Pronto para levantar','Entregue'];
+let lastTrack=0;
+$('trackForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  showError($('trackError'),'');$('trackResult').hidden=true;
+  if(notConfigured())return;
+  if(Date.now()-lastTrack<3000)return;
+  lastTrack=Date.now();
+  const {data,error}=await db.rpc('track_order',{p_code:$('trackCode').value.trim(),p_phone4:$('trackPhone').value.trim()});
+  if(error){showError($('trackError'),'Não foi possível consultar agora. Tente novamente em instantes.');return}
+  const d=Array.isArray(data)?data[0]:data;
+  if(!d){showError($('trackError'),'Não encontrámos nenhum pedido com esses dados. Confirme o código e os 4 últimos dígitos do telefone.');return}
+  const i=STAGES.indexOf(d.stage),fmt=t=>new Date(t).toLocaleDateString('pt-PT');
+  $('trackResult').innerHTML=`<div class="tr-head"><b>${esc(d.product)}</b><span>Pedido de ${fmt(d.created_at)} · actualizado a ${fmt(d.updated_at)}</span></div>`
+    +(d.stage==='Cancelado'?'<p class="tr-note">Este pedido foi cancelado. Contacte-nos para mais informação.</p>'
+      :`<ol class="tl">${STAGES.map((s,k)=>`<li class="${k<i?'done':k===i?'now':''}"><i></i><span>${s}</span></li>`).join('')}</ol>`)
+    +(d.public_note?`<p class="tr-note">${esc(d.public_note)}</p>`:'');
+  $('trackResult').hidden=false;
+});
 $('leadForm').addEventListener('submit',async e=>{
   e.preventDefault();
   showError($('errorMsg'),'');
@@ -51,7 +73,7 @@ $('leadForm').addEventListener('submit',async e=>{
   if(Date.now()-lastSubmit<15000){showError($('errorMsg'),'Aguarde alguns segundos antes de enviar novamente.');return}
   const btn=$('submitBtn');
   btn.disabled=true;
-  const {error}=await db.from('leads').insert({
+  const row={
     name:$('name').value.trim(),
     phone:$('phone').value.trim(),
     email:$('email').value.trim()||null,
@@ -59,13 +81,20 @@ $('leadForm').addEventListener('submit',async e=>{
     quantity:$('quantity').value,
     message:$('message').value.trim()||null,
     channel:$('channel').value
-  });
+  };
+  let code=newCode();
+  let {error}=await db.from('leads').insert({...row,track_code:code});
+  if(error&&error.code==='23505'){code=newCode();({error}=await db.from('leads').insert({...row,track_code:code}))}
+  if(error&&/track_code|column/i.test(error.message||'')){code=null;({error}=await db.from('leads').insert(row))}   // base ainda sem a migração de acompanhamento
   btn.disabled=false;
   if(error){showError($('errorMsg'),'Não foi possível enviar o pedido. Tente novamente ou contacte-nos por WhatsApp.');return}
   lastSubmit=Date.now();
   $('leadForm').reset();
-  $('successMsg').style.display='block';
-  setTimeout(()=>$('successMsg').style.display='none',6000);
+  const ok=$('successMsg');
+  ok.textContent=code?`Pedido registado. O seu código é ${code}. Guarde-o: com os últimos 4 dígitos do seu telefone, permite acompanhar o pedido.`:'Pedido registado. A nossa equipa poderá dar seguimento pelo canal escolhido.';
+  ok.style.display='block';
+  if(code)$('trackCode').value=code;
+  setTimeout(()=>ok.style.display='none',code?45000:6000);
 });
 
 // ---------------------------------------------------------------------------
@@ -147,7 +176,7 @@ function updateStats(){
 function renderLeads(){
   const q=($('search')?.value||'').toLowerCase(),st=$('filterStatus')?.value||'';
   const data=leads.filter(x=>(!st||x.status===st)&&[x.name,x.phone,x.email,x.product].join(' ').toLowerCase().includes(q));
-  $('leadRows').innerHTML=data.length?data.map(x=>`<tr><td><b>${esc(x.name)}</b><br><span style="color:#87918a">${esc(x.email||'Sem e-mail')}</span></td><td>${esc(x.product)}${x.quantity?`<br><span style="color:#87918a">${esc(x.quantity)}</span>`:''}</td><td>${esc(x.phone)}</td><td><span class="status ${esc(x.status)}">${esc(x.status)}</span></td><td>${new Date(x.created_at).toLocaleDateString('pt-PT')}</td><td><div class="row-actions"><button class="iconbtn" onclick="editLead('${esc(x.id)}')">Editar</button><button class="iconbtn" onclick="routeLead('${esc(x.id)}')">Contactar</button><button class="iconbtn" onclick="deleteLead('${esc(x.id)}')">Apagar</button></div></td></tr>`).join(''):'<tr><td colspan="6" class="empty">Ainda não existem clientes com estes critérios.</td></tr>';
+  $('leadRows').innerHTML=data.length?data.map(x=>`<tr><td><b>${esc(x.name)}</b><br><span style="color:#87918a">${esc(x.email||'Sem e-mail')}</span><br><span style=\"color:#87918a;font-size:11px\">${esc(x.track_code||'')}</span></td><td>${esc(x.product)}${x.quantity?`<br><span style="color:#87918a">${esc(x.quantity)}</span>`:''}</td><td>${esc(x.phone)}</td><td><span class="status ${esc(x.status)}">${esc(x.status)}</span></td><td>${new Date(x.created_at).toLocaleDateString('pt-PT')}</td><td><div class="row-actions"><button class="iconbtn" onclick="editLead('${esc(x.id)}')">Editar</button><button class="iconbtn" onclick="routeLead('${esc(x.id)}')">Contactar</button><button class="iconbtn" onclick="deleteLead('${esc(x.id)}')">Apagar</button></div></td></tr>`).join(''):'<tr><td colspan="6" class="empty">Ainda não existem clientes com estes critérios.</td></tr>';
   updateStats();
 }
 
@@ -170,6 +199,8 @@ function editLead(id){
   $('crmQty').value=x.quantity||'';
   $('crmStatus').value=x.status;
   $('crmNotes').value=x.notes||'';
+  $('crmStage').value=x.stage||'Pedido recebido';
+  $('crmPublic').value=x.public_note||'';
   $('modalTitle').textContent='Editar cliente';
   $('leadModal').classList.add('show');
 }
@@ -184,7 +215,9 @@ $('crmForm').addEventListener('submit',async e=>{
     product:$('crmProduct').value.trim(),
     quantity:$('crmQty').value.trim()||null,
     status:$('crmStatus').value,
-    notes:$('crmNotes').value.trim()||null
+    notes:$('crmNotes').value.trim()||null,
+    stage:$('crmStage').value,
+    public_note:$('crmPublic').value.trim()||null
   };
   const {error}=id?await db.from('leads').update(row).eq('id',id):await db.from('leads').insert({...row,source:'manual'});
   if(error){toast('Erro ao guardar o cliente.');return}
