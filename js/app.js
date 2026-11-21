@@ -7,6 +7,9 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const CFG=window.GLOSILY_CONFIG||{};
 const configured=!!(CFG.SUPABASE_URL&&CFG.SUPABASE_ANON_KEY&&window.supabase);
 const db=configured?window.supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
+const T=s=>(window.glosilyT?window.glosilyT(s):s);
+function track(name,data){try{if(!db||navigator.doNotTrack==='1')return;db.from('events').insert({name,data:data||null}).then(()=>{},()=>{})}catch(e){}}
+try{if(!sessionStorage.getItem('pv')){sessionStorage.setItem('pv','1');track('pageview')}}catch(e){}
 
 let leads=[];
 let settings={whatsapp:'',email:''};
@@ -39,6 +42,7 @@ async function loadPublicSettings(){
     const a=$('waFloat');
     a.href=`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent('Olá! Gostaria de pedir uma cotação.')}`;
     a.hidden=false;
+    a.addEventListener('click',()=>{const p=$('product').value;a.href=`https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(p?`Olá! Gostaria de uma cotação: ${p}.`:'Olá! Gostaria de pedir uma cotação.')}`;track('wa_click')});
   }
 }
 
@@ -55,22 +59,23 @@ $('trackForm').addEventListener('submit',async e=>{
   if(Date.now()-lastTrack<3000)return;
   lastTrack=Date.now();
   const {data,error}=await db.rpc('track_order',{p_code:$('trackCode').value.trim(),p_phone4:$('trackPhone').value.trim()});
-  if(error){showError($('trackError'),'Não foi possível consultar agora. Tente novamente em instantes.');return}
+  if(error){showError($('trackError'),T('Não foi possível consultar agora. Tente novamente em instantes.'));return}
   const d=Array.isArray(data)?data[0]:data;
-  if(!d){showError($('trackError'),'Não encontrámos nenhum pedido com esses dados. Confirme o código e os 4 últimos dígitos do telefone.');return}
+  if(!d){showError($('trackError'),T('Não encontrámos nenhum pedido com esses dados. Confirme o código e os 4 últimos dígitos do telefone.'));return}
   const i=STAGES.indexOf(d.stage),fmt=t=>new Date(t).toLocaleDateString('pt-PT');
-  $('trackResult').innerHTML=`<div class="tr-head"><b>${esc(d.product)}</b><span>Pedido de ${fmt(d.created_at)} · actualizado a ${fmt(d.updated_at)}</span></div>`
-    +(d.stage==='Cancelado'?'<p class="tr-note">Este pedido foi cancelado. Contacte-nos para mais informação.</p>'
-      :`<ol class="tl">${STAGES.map((s,k)=>`<li class="${k<i?'done':k===i?'now':''}"><i></i><span>${s}</span></li>`).join('')}</ol>`)
+  $('trackResult').innerHTML=`<div class="tr-head"><b>${esc(d.product)}</b><span>${T('Pedido de ')}${fmt(d.created_at)}${T(' · actualizado a ')}${fmt(d.updated_at)}</span></div>`
+    +(d.stage==='Cancelado'?`<p class="tr-note">${T('Este pedido foi cancelado. Contacte-nos para mais informação.')}</p>`
+      :`<ol class="tl">${STAGES.map((s,k)=>`<li class="${k<i?'done':k===i?'now':''}"><i></i><span>${T(s)}</span></li>`).join('')}</ol>`)
     +(d.public_note?`<p class="tr-note">${esc(d.public_note)}</p>`:'');
   $('trackResult').hidden=false;
+  track('track_used');
 });
 $('leadForm').addEventListener('submit',async e=>{
   e.preventDefault();
   showError($('errorMsg'),'');
   if($('website').value)return;                       // honeypot: bots preenchem este campo
   if(notConfigured())return;
-  if(Date.now()-lastSubmit<15000){showError($('errorMsg'),'Aguarde alguns segundos antes de enviar novamente.');return}
+  if(Date.now()-lastSubmit<15000){showError($('errorMsg'),T('Aguarde alguns segundos antes de enviar novamente.'));return}
   const btn=$('submitBtn');
   btn.disabled=true;
   const row={
@@ -87,11 +92,12 @@ $('leadForm').addEventListener('submit',async e=>{
   if(error&&error.code==='23505'){code=newCode();({error}=await db.from('leads').insert({...row,track_code:code}))}
   if(error&&/track_code|column/i.test(error.message||'')){code=null;({error}=await db.from('leads').insert(row))}   // base ainda sem a migração de acompanhamento
   btn.disabled=false;
-  if(error){showError($('errorMsg'),'Não foi possível enviar o pedido. Tente novamente ou contacte-nos por WhatsApp.');return}
+  if(error){showError($('errorMsg'),T('Não foi possível enviar o pedido. Tente novamente ou contacte-nos por WhatsApp.'));return}
   lastSubmit=Date.now();
   $('leadForm').reset();
   const ok=$('successMsg');
-  ok.textContent=code?`Pedido registado. O seu código é ${code}. Guarde-o: com os últimos 4 dígitos do seu telefone, permite acompanhar o pedido.`:'Pedido registado. A nossa equipa poderá dar seguimento pelo canal escolhido.';
+  ok.textContent=code?T('Pedido registado. O seu código é ')+code+T('. Guarde-o: com os últimos 4 dígitos do seu telefone, permite acompanhar o pedido.'):T('Pedido registado. A nossa equipa poderá dar seguimento pelo canal escolhido.');
+  track('quote_submitted');
   ok.style.display='block';
   if(code)$('trackCode').value=code;
   setTimeout(()=>ok.style.display='none',code?45000:6000);
@@ -272,6 +278,14 @@ async function saveSettings(){
 function renderOverview(){
   const count=s=>leads.filter(x=>x.status===s).length;
   $('overviewText').innerHTML=`<div class="stats" style="margin-top:20px"><div class="stat"><span>Contactados</span><strong>${count('Contactado')}</strong></div><div class="stat"><span>Qualificados</span><strong>${count('Qualificado')}</strong></div><div class="stat"><span>Fechados</span><strong>${count('Fechado')}</strong></div><div class="stat"><span>Perdidos</span><strong>${count('Perdido')}</strong></div></div><p style="font-size:12px;color:#68736f">Dica operacional: registe sempre o resultado do contacto nas notas e actualize o estado para manter o pipeline fiável.</p>`;
+  loadEventStats();
+}
+async function loadEventStats(){
+  const el=$('overviewText');if(!db)return;
+  const {data,error}=await db.from('events').select('name').gte('created_at',new Date(Date.now()-30*864e5).toISOString()).limit(20000);
+  if(error||!data)return;
+  const c=n=>data.filter(e=>e.name===n).length,v=c('pageview'),q=c('quote_submitted');
+  el.insertAdjacentHTML('beforeend',`<h3 style="margin:24px 0 0">Visitas e acções (últimos 30 dias)</h3><div class="stats" style="margin-top:12px"><div class="stat"><span>Visitas</span><strong>${v}</strong></div><div class="stat"><span>Pedidos enviados</span><strong>${q}</strong></div><div class="stat"><span>Conversão</span><strong>${v?(q/v*100).toFixed(1):0}%</strong></div><div class="stat"><span>Cliques WhatsApp</span><strong>${c('wa_click')}</strong></div></div><p style="font-size:12px;color:#68736f">Consultas de pedido: ${c('track_used')} · Detalhes de produto: ${c('product_view')}. Sem cookies nem dados pessoais; respeita Do Not Track.</p>`);
 }
 
 loadPublicSettings();

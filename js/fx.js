@@ -3,13 +3,19 @@
 const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
 document.querySelectorAll('.section-head,.step,.lead-grid>div').forEach(el=>{el.classList.add('rv');io.observe(el)});
-if(matchMedia('(pointer:fine)').matches&&!rm)document.querySelectorAll('.product,.svc .card').forEach(el=>{
-  el.addEventListener('pointermove',e=>{const b=el.getBoundingClientRect(),x=(e.clientX-b.left)/b.width-.5,y=(e.clientY-b.top)/b.height-.5;el.style.setProperty('--ry',x*14+'deg');el.style.setProperty('--rx',-y*14+'deg');if(el.closest('.svc')){document.querySelectorAll('.svc .card').forEach(c=>c.classList.toggle('on',c===el))}});
-  el.addEventListener('pointerleave',()=>{el.style.setProperty('--rx','0deg');el.style.setProperty('--ry','0deg')});
-});
-const cv=document.getElementById('gl');if(!cv||!window.THREE)return;
-let R;try{R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true})}catch(e){cv.remove();return}
-R.setPixelRatio(Math.min(devicePixelRatio,2));
+if(matchMedia('(pointer:fine)').matches&&!rm){
+  const K='.product,.svc .card',set=(el,x,y)=>{el.style.setProperty('--ry',x*14+'deg');el.style.setProperty('--rx',-y*14+'deg')};
+  document.addEventListener('pointermove',e=>{const el=e.target.closest&&e.target.closest(K);if(!el)return;const b=el.getBoundingClientRect();set(el,(e.clientX-b.left)/b.width-.5,(e.clientY-b.top)/b.height-.5);if(el.closest('.svc'))document.querySelectorAll('.svc .card').forEach(c=>c.classList.toggle('on',c===el))});
+  document.addEventListener('pointerout',e=>{const el=e.target.closest&&e.target.closest(K);if(el&&!el.contains(e.relatedTarget))set(el,0,0)});
+}
+const cv=document.getElementById('gl');
+let off=false;try{off=localStorage.getItem('fx3d')==='off'}catch(e){}
+if(!cv)return;if(off){cv.remove();return}
+const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';sc.onload=start;sc.onerror=()=>cv.remove();document.head.appendChild(sc);
+function start(){
+const low=(navigator.deviceMemory&&navigator.deviceMemory<=4)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||(navigator.connection&&navigator.connection.saveData);
+let R;try{R=new THREE.WebGLRenderer({canvas:cv,antialias:!low,alpha:true})}catch(e){cv.remove();return}
+R.setPixelRatio(low?1:Math.min(devicePixelRatio,2));
 const S=new THREE.Scene(),C=new THREE.PerspectiveCamera(34,1,.1,60);
 S.add(new THREE.HemisphereLight(0xe3edff,0x040d24,1));
 const key=new THREE.DirectionalLight(0xffffff,1.3);key.position.set(3,5,6);S.add(key);
@@ -25,12 +31,12 @@ const cn=document.createElement('canvas');cn.width=256;cn.height=64;const cx=cn.
 const tag=new THREE.Mesh(new THREE.PlaneGeometry(.7,.175),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cn)}));tag.position.set(0,-.95,.82);bag.add(tag);
 const G=new THREE.Group();G.add(bag);S.add(G);
 const globe=new THREE.Mesh(new THREE.SphereGeometry(3,36,24),new THREE.MeshBasicMaterial({color:0x2f78f0,wireframe:true,transparent:true,opacity:.16}));G.add(globe);
-const orb=new THREE.Group();orb.rotation.z=.4;orb.rotation.x=.35;G.add(orb);
+const orb=new THREE.Group();orb.rotation.z=.4;orb.rotation.x=.35;G.add(orb);orb.visible=!low;
 orb.add(new THREE.Mesh(new THREE.TorusGeometry(3.7,.008,6,140),new THREE.MeshBasicMaterial({color:0x6db3ff,transparent:true,opacity:.4})));
 const bx=[];for(let i=0;i<6;i++){const m=new THREE.Mesh(new THREE.BoxGeometry(.5,.26,.26),new THREE.MeshStandardMaterial({color:[0x2f78f0,0x1b4fb8,0x6db3ff][i%3],roughness:.45,metalness:.3}));m.userData.a=i/6*Math.PI*2;orb.add(m);bx.push(m)}
 const ring=(r,o)=>{const m=new THREE.Mesh(new THREE.TorusGeometry(r,.012,8,120),new THREE.MeshBasicMaterial({color:0x6db3ff,transparent:true,opacity:o}));m.rotation.x=Math.PI/2;m.position.y=-1.9;m.visible=false;S.add(m);return m};
 const r1=ring(2.1,.5),r2=ring(2.9,.22);
-const N=180,pp=new Float32Array(N*3);for(let i=0;i<N*3;i++)pp[i]=(Math.random()-.5)*(i%3==1?9:14);
+const N=low?60:180,pp=new Float32Array(N*3);for(let i=0;i<N*3;i++)pp[i]=(Math.random()-.5)*(i%3==1?9:14);
 const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
 const pts=new THREE.Points(pg,new THREE.PointsMaterial({color:0x8fc4ff,size:.045,transparent:true,opacity:.6}));S.add(pts);
 const hero=cv.parentElement;let mx=0,my=0,vis=true;
@@ -44,4 +50,5 @@ new ResizeObserver(size).observe(hero);
 new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(hero);
 if(!rm)(function loop(){requestAnimationFrame(loop);if(vis&&!document.hidden)draw()})();
 addEventListener('scroll',()=>{if(rm)draw()},{passive:true});
+}
 })();
