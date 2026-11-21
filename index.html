@@ -13,13 +13,13 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Sora:wght@300;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=4">
-<link rel="stylesheet" href="css/theme-azul.css?v=4">
+<link rel="stylesheet" href="css/styles.css?v=5">
+<link rel="stylesheet" href="css/theme-azul.css?v=5">
 </head>
 <body>
 <header><div class="wrap nav">
   <a class="brand" href="#">Glosily<span>Service.</span></a>
-  <div class="navright"><button class="pill" onclick="openAdmin()">Área de gestão ↗</button><a class="btn" href="#contacto">Solicitar cotação</a></div>
+  <div class="navright"><a class="pill" href="#acompanhar">Acompanhar pedido</a><button class="pill" onclick="openAdmin()">Área de gestão ↗</button><a class="btn" href="#contacto">Solicitar cotação</a></div>
 </div></header>
 
 <main>
@@ -44,6 +44,9 @@
   <div class="steps"><div class="step"><div class="num">01</div><h3>Conte-nos o que procura</h3><p>Indique o produto, modelo, quantidade e quaisquer referências que tenha.</p></div><div class="step"><div class="num">02</div><h3>Receba a sua cotação</h3><p>Analisamos o pedido e entramos em contacto com preço estimado, prazo e condições.</p></div><div class="step"><div class="num">03</div><h3>Acompanhe o pedido</h3><p>Após a confirmação, mantemos comunicação sobre o progresso da importação.</p></div></div>
 </div></section>
 
+<section id="acompanhar"><div class="wrap"><div class="section-head"><div><div class="tag">Acompanhamento</div><h2>Onde está o seu pedido?</h2></div><p>Introduza o código recebido ao fazer o pedido e os 4 últimos dígitos do seu telefone.</p></div>
+  <form class="track-form" id="trackForm"><input id="trackCode" placeholder="GLS-XXXXXX" maxlength="10" required autocomplete="off" aria-label="Código do pedido"><input id="trackPhone" placeholder="Últimos 4 dígitos do telefone" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required aria-label="Últimos 4 dígitos do telefone"><button class="btn" type="submit">Consultar</button></form>
+  <div class="error" id="trackError" role="alert"></div><div class="track-result" id="trackResult" hidden></div></div></section>
 <section class="lead-section" id="contacto"><div class="wrap lead-grid">
   <div><div class="eyebrow">Vamos conversar</div><h2>Tem um produto em mente?</h2><p>Preencha o formulário. A nossa equipa recebe o seu pedido, organiza as informações e dá seguimento pelo canal mais conveniente.</p><p>Também pode pedir produtos que não estejam no catálogo.</p></div>
   <form class="lead-form" id="leadForm"><h3>Solicitar atendimento</h3><div class="success" id="successMsg">Pedido registado. A nossa equipa poderá dar seguimento pelo canal escolhido.</div>
@@ -82,12 +85,12 @@
 </div>
 
 <div class="modal" id="leadModal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle">Novo cliente</h3><button class="close" onclick="closeLeadModal()">✕</button></div><form id="crmForm" class="modal-form">
-<input type="hidden" id="editId"><div class="field"><label>Nome *</label><input id="crmName" required></div><div class="field"><label>Telefone / WhatsApp *</label><input id="crmPhone" required></div><div class="field"><label>E-mail</label><input id="crmEmail" type="email"></div><div class="field"><label>Produto / pedido *</label><input id="crmProduct" required maxlength="160"></div><div class="field"><label>Quantidade</label><input id="crmQty" maxlength="60" placeholder="Ex.: 10 unidades"></div><div class="field"><label>Estado do atendimento</label><select id="crmStatus"><option>Novo</option><option>Contactado</option><option>Qualificado</option><option>Fechado</option><option>Perdido</option></select></div><div class="field"><label>Notas de pré-atendimento</label><textarea id="crmNotes" placeholder="Necessidade, orçamento, urgência, próximos passos..."></textarea></div><div class="modal-actions"><button type="button" class="small-btn" onclick="closeLeadModal()">Cancelar</button><button class="btn" type="submit">Guardar cliente</button></div></form></div></div>
+<input type="hidden" id="editId"><div class="field"><label>Nome *</label><input id="crmName" required></div><div class="field"><label>Telefone / WhatsApp *</label><input id="crmPhone" required></div><div class="field"><label>E-mail</label><input id="crmEmail" type="email"></div><div class="field"><label>Produto / pedido *</label><input id="crmProduct" required maxlength="160"></div><div class="field"><label>Quantidade</label><input id="crmQty" maxlength="60" placeholder="Ex.: 10 unidades"></div><div class="field"><label>Estado do atendimento</label><select id="crmStatus"><option>Novo</option><option>Contactado</option><option>Qualificado</option><option>Fechado</option><option>Perdido</option></select></div><div class="field"><label>Fase do pedido (visível ao cliente)</label><select id="crmStage"><option>Pedido recebido</option><option>Cotação enviada</option><option>Confirmado</option><option>Em trânsito</option><option>Desalfandegamento</option><option>Pronto para levantar</option><option>Entregue</option><option>Cancelado</option></select></div><div class="field"><label>Nota para o cliente (visível, máx. 300)</label><input id="crmPublic" maxlength="300" placeholder="Ex.: Chegada prevista na próxima semana"></div><div class="field"><label>Notas de pré-atendimento</label><textarea id="crmNotes" placeholder="Necessidade, orçamento, urgência, próximos passos..."></textarea></div><div class="modal-actions"><button type="button" class="small-btn" onclick="closeLeadModal()">Cancelar</button><button class="btn" type="submit">Guardar cliente</button></div></form></div></div>
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" crossorigin="anonymous"></script>
 <script src="js/config.js"></script>
-<script src="js/app.js?v=4"></script>
+<script src="js/app.js?v=5"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="js/fx.js?v=4"></script>
+<script src="js/fx.js?v=5"></script>
 </body>
 </html>
