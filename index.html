@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Importação de mochilas e acessórios. Solicite uma cotação ou fale com a nossa equipa.">
 <title>GlosilyService — Mochilas e acessórios</title>
-<meta name="theme-color" content="#0b1413">
+<meta name="theme-color" content="#040d24">
 <meta property="og:type" content="website">
 <meta property="og:title" content="GlosilyService — Mochilas e acessórios">
 <meta property="og:description" content="Importação de mochilas, pastas e acessórios. Peça uma cotação sem compromisso.">
 <meta property="og:locale" content="pt_MZ">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Jost:wght@200;300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Sora:wght@300;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
-<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/theme-azul.css">
 </head>
 <body>
 <header><div class="wrap nav">
@@ -23,12 +23,13 @@
 </div></header>
 
 <main>
-<section class="hero"><canvas id="gl" aria-hidden="true"></canvas><div class="beam"></div>
-  <div class="wrap hero-copy"><h1>O produto certo. Do mundo até si.</h1>
-    <p>Mochilas, pastas e acessórios de qualidade. Tratamos da importação e acompanhamos o seu pedido até à entrega.</p>
-    <div class="actions"><a class="btn light" href="#produtos">Explorar produtos</a><a class="btn outline" href="#contacto">Pedir uma cotação</a></div></div>
-  <nav class="band" aria-label="Secções"><a href="#produtos">Produtos</a><a href="#processo">Como funciona</a><a href="#contacto">Pedir cotação</a><button type="button" onclick="openAdmin()">Área de gestão</button></nav>
-</section>
+<section class="hero"><canvas id="gl" aria-hidden="true"></canvas>
+  <div class="hero-copy"><h1>O produto certo. Do mundo até si.</h1>
+    <p class="sub">Importação simplificada, do pedido à entrega.</p>
+    <p>Mochilas, pastas e acessórios de qualidade. Tratamos da importação e acompanhamos o seu pedido.</p>
+    <div class="actions"><a class="btn" href="#contacto">Pedir uma cotação</a><a class="btn outline" href="#produtos">Explorar produtos</a></div>
+    <div class="svc"><button class="card on" onclick="selectProduct('Mochila urbana')"><svg viewBox="0 0 24 24"><path d="M9 6a3 3 0 016 0M6 9a3 3 0 013-3h6a3 3 0 013 3v11H6zM9 15h6"/></svg><b>Urbana</b><small>Dia-a-dia e estudo</small></button><button class="card" onclick="selectProduct('Mochila executiva')"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M9 8V6h6v2M4 13h16"/></svg><b>Executiva</b><small>Portátil e documentos</small></button><button class="card" onclick="selectProduct('Pastas e acessórios')"><svg viewBox="0 0 24 24"><path d="M4 7h6l2 2h8v10H4z"/></svg><b>Pastas</b><small>Organizar e transportar</small></button></div>
+  </div></section>
 
 <section id="produtos"><div class="wrap">
   <div class="section-head"><div><div class="tag">Catálogo em destaque</div><h2>Escolha o que precisa.</h2></div><p>Estes são exemplos de produtos. Envie-nos o modelo, quantidade ou referência que procura para receber uma cotação personalizada.</p></div>
